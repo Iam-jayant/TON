@@ -3,7 +3,7 @@ export const API_BASE_URL =
 
 export const TON_MANIFEST_URL =
   process.env.NEXT_PUBLIC_TON_CONNECT_MANIFEST ??
-  "https://inheritor-ton.vercel.app/tonconnect-manifest.json";
+  "http://localhost:3000/tonconnect-manifest.json";
 
 export const DEADMAN_THRESHOLDS = [
   { label: "14 days", value: 14 },
