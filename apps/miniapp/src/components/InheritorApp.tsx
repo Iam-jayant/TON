@@ -89,6 +89,18 @@ function MainDashboard() {
   const canSave =
     Boolean(tonAddress) && !formHasGaps && totalShare === 100 && !loading;
 
+  const parsedTelegram: any = useMemo(() => {
+    if (!telegram) return undefined;
+    if (typeof telegram === "string") {
+      try {
+        return JSON.parse(telegram);
+      } catch {
+        return undefined;
+      }
+    }
+    return telegram;
+  }, [telegram]);
+
   const submitVault = useCallback(async () => {
     setShowValidation(true);
     if (!tonAddress) {
@@ -110,7 +122,7 @@ function MainDashboard() {
         ownerTonAddress: tonAddress,
         inactivityDays,
         nominees,
-        backupEmail: telegram?.initData?.user?.username ?? undefined,
+        backupEmail: parsedTelegram?.initData?.user?.username ?? undefined,
       };
       const { vaultId } = await api.createVault(payload);
       const fresh = await api.fetchVault(tonAddress);
@@ -121,7 +133,7 @@ function MainDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [tonAddress, inactivityDays, nominees, totalShare, telegram, formHasGaps]);
+  }, [tonAddress, inactivityDays, nominees, totalShare, parsedTelegram, formHasGaps]);
 
   const sendPing = async () => {
     if (!tonAddress) return;

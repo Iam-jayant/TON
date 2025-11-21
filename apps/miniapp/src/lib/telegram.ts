@@ -1,35 +1,31 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp?: WebApp;
-    };
-  }
-
-  interface WebApp {
-    initData?: string;
-    initDataUnsafe?: Record<string, unknown>;
-    ready: () => void;
-    expand: () => void;
-    close: () => void;
-    sendData: (data: string) => void;
-    onEvent: (event: string, handler: () => void) => void;
-    offEvent: (event: string, handler: () => void) => void;
-    version?: string;
-    platform?: string;
-    colorScheme?: string;
-    themeParams?: Record<string, string>;
-  }
+// Local, exported WebApp type to avoid colliding with other global declarations
+export interface WebApp {
+  initData?: string;
+  initDataUnsafe?: Record<string, unknown>;
+  ready: () => void;
+  expand: () => void;
+  close: () => void;
+  sendData: (data: string) => void;
+  onEvent: (event: string, handler: () => void) => void;
+  offEvent: (event: string, handler: () => void) => void;
+  version?: string;
+  platform?: string;
+  colorScheme?: string;
+  themeParams?: Record<string, string>;
 }
+
+type LocalWindow = Window & { Telegram?: { WebApp?: WebApp } };
 
 export function useTelegramMiniApp() {
   const [tg, setTg] = useState<WebApp | null>(null);
 
   useEffect(() => {
-    const webApp = window?.Telegram?.WebApp;
+    const local = window as unknown as LocalWindow;
+    const webApp = local?.Telegram?.WebApp;
     if (!webApp) {
       console.warn("Telegram WebApp context not detected; running in browser mode.");
       return;
