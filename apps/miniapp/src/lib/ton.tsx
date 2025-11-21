@@ -32,7 +32,7 @@ export function TonWalletButton() {
 }
 
 export function useTon() {
-  const [tonConnectUI] = useTonConnectUI();
+  const tonConnectUI = useTonConnectUI();
   const tonAddress = useTonAddress();
 
   return {
